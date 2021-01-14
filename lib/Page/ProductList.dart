@@ -121,7 +121,7 @@ class _ProductsListState extends State<ProductsList> {
 
   Widget loading() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: CupertinoActivityIndicator(),
     );
   }
 }

@@ -76,7 +76,7 @@ class _DetailsState extends State<Details> {
             // print("Details: " + snapshot.data);
             else
               return Center(
-                child: CircularProgressIndicator(),
+                child: CupertinoActivityIndicator(),
               );
           },
         ));

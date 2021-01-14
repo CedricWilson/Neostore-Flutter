@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_neostore/Helpers/SharedPrefs.dart';
 import 'package:flutter_neostore/Modal/ResponseBuy.dart';
 import 'package:flutter_neostore/Modal/ResponseCart.dart';
 import 'package:flutter_neostore/Modal/ResponseDetails.dart';
 import 'package:flutter_neostore/Modal/ResponseLogin.dart';
+import 'package:flutter_neostore/Modal/ResponseOrder.dart';
+import 'package:flutter_neostore/Modal/ResponseOrderDetail.dart';
 import 'package:flutter_neostore/Modal/ResponseProduct.dart';
 import 'package:flutter_neostore/Modal/ResponseRegistration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,9 +21,47 @@ class ApiProvider {
     _dio = Dio(options);
   }
 
+  Future<ResponseOrderDetail> orderdetail(String id) async {
+    String append = "orderDetail";
+    String token = await SharedPrefs().token();
+    try {
+      Response response = await _dio.get(_base + append,
+          options: Options(
+            headers: {"access_token": token},
+          ),
+          queryParameters: {"order_id": id});
+      var parsed = json.decode(response.data);
+      return ResponseOrderDetail.fromJson(parsed);
+    } on DioError catch (e) {
+      print(e.message);
+
+      print("DIO: " + e.response.data.toString());
+      var parsed = json.decode(e.response.data);
+      throw parsed["user_msg"];
+    }
+  }
+
+  Future<ResponseOrder> orderlist() async {
+    String append = "orderList";
+    String token = await SharedPrefs().token();
+    try {
+      Response response = await _dio.get(
+        _base + append,
+        options: Options(
+          headers: {"access_token": token},
+        ),
+      );
+      var parsed = json.decode(response.data);
+      return ResponseOrder.fromJson(parsed);
+    } on DioError catch (e) {
+      print(e.message);
+      print("DIO: " + e.response.data.toString());
+      var parsed = json.decode(e.response.data);
+      throw parsed["user_msg"];
+    }
+  }
 
   Future<int> order(String address, String token) async {
-
     String append = "order";
 
     FormData formData = new FormData.fromMap({
@@ -35,7 +76,7 @@ class ApiProvider {
         ),
       );
       var parsed = json.decode(response.data);
-      print("Api: "+parsed['status'].toString());
+      print("Api: " + parsed['status'].toString());
       return parsed['status'];
     } on DioError catch (e) {
       print(e.message);
@@ -48,8 +89,8 @@ class ApiProvider {
   Future<int> cartupdate(int id, int quantity) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
-    String test1=id.toString();
-    String test2=quantity.toString();
+    String test1 = id.toString();
+    String test2 = quantity.toString();
 
     String append = "editCart";
     FormData formData = new FormData.fromMap({

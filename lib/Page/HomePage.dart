@@ -38,8 +38,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: InkWell(
           onTap: (){
-            Navigator.pushNamed(context, '/address');
-            BlocProvider.of<AddressBloc>(context).add(AddressStarted());
+            Navigator.pushNamed(context, '/orders');
           },
           child: Text(
             "NeoStore",

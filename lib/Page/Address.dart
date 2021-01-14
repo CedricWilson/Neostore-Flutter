@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Bloc/AddressBloc/address_bloc.dart';
 import 'package:flutter_neostore/Bloc/AddressBloc/address_events.dart';
@@ -53,9 +54,8 @@ class _AddressState extends State<Address> {
       body: BlocConsumer<AddressBloc, AddressStates>(
         listener:  (context,states){
           if(states is OrderSuccess){
-            // print("state: Auth Initial");
-            Navigator.pushNamedAndRemoveUntil(context, '/homescreen/orders', (route) => false);
-            push();
+
+            Navigator.pushNamed(context,'/orders' );
           }
         },
         builder: (context, state) {

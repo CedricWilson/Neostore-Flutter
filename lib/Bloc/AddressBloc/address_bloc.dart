@@ -35,17 +35,17 @@ class AddressBloc extends Bloc<AddressEvent, AddressStates> {
     }
 
     if (event is Order) {
-      // User dot = await SharedPrefs().fetchUser();
-      //
-      // if (dot.token != null) {
-      //   int pop = await ApiProvider().order(event.address, dot.token);
-      //
-      //   if (pop == 200) {
-      //     yield OrderSuccess(msg: "Order Successful");
-      //   }
-      // }
+      User dot = await SharedPrefs().fetchUser();
 
-      yield OrderSuccess(msg: "Order Successful");
+      if (dot.token != null) {
+        int pop = await ApiProvider().order(event.address, dot.token);
+
+        if (pop == 200) {
+          yield OrderSuccess(msg: "Order Successful");
+        }
+      }
+
+     // yield OrderSuccess(msg: "Order Successful");
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_neostore/Page/Cart.dart';
 import 'package:flutter_neostore/Page/Details.dart';
 import 'package:flutter_neostore/Page/HomePage.dart';
 import 'package:flutter_neostore/Page/Login.dart';
+import 'package:flutter_neostore/Page/OrderDetail.dart';
 import 'package:flutter_neostore/Page/Orders.dart';
 import 'package:flutter_neostore/Page/ProductList.dart';
 import 'package:flutter_neostore/Page/Registration.dart';
@@ -36,6 +37,9 @@ class Routes{
            return MaterialPageRoute(builder: (_)=> Address());
          case RoutingConstants.orders:
            return MaterialPageRoute(builder: (_)=> Orders());
+         case RoutingConstants.orderdetail:
+           int id = settings.arguments;
+           return MaterialPageRoute(builder: (_)=> OrderDetailsPage(id: id));
        }
   }
 }
@@ -49,4 +53,5 @@ class RoutingConstants{
   static const String cart = "/cart";
   static const String address = "/address";
   static const String orders = "/orders";
+  static const String orderdetail = "/orderdetail";
 }

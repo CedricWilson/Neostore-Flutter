@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Api/apiprovider.dart';
@@ -273,7 +274,7 @@ class _CartState extends State<Cart> with SingleTickerProviderStateMixin {
 
   Widget loading() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: CupertinoActivityIndicator(),
     );
   }
 
