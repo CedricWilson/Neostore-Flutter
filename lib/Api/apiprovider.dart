@@ -21,6 +21,28 @@ class ApiProvider {
     _dio = Dio(options);
   }
 
+  Future<String> rate(int id, int rating) async {
+
+    String append = "products/setRating";
+    FormData formData = new FormData.fromMap({
+      "product_id": id,
+      "rating": rating,
+    });
+    try {
+      Response response = await _dio.post(
+        _base + append,
+        data: formData,
+      );
+      var parsed = json.decode(response.data);
+      return parsed['user_msg'];
+    } on DioError catch (e) {
+      print(e.message);
+      print("DIO: " + e.response.data.toString());
+      var parsed = json.decode(e.response.data);
+      throw parsed["user_msg"];
+    }
+  }
+
   Future<ResponseOrderDetail> orderdetail(String id) async {
     String append = "orderDetail";
     String token = await SharedPrefs().token();

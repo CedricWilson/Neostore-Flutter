@@ -14,7 +14,7 @@ class _RegistrationState extends State<Registration> {
   String _firstname;
   String _lastname;
   String _email;
-  String _password ="123456";
+  String _password = "123456";
   String _confirm;
   String _phone = "37373772";
   bool _agree = false;
@@ -69,7 +69,7 @@ class _RegistrationState extends State<Registration> {
 
   renderform() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 40, top: 100),
+      padding: const EdgeInsets.only(left: 20, right: 40),
       child: Form(
         key: _formKey,
         child: Container(
@@ -82,15 +82,14 @@ class _RegistrationState extends State<Registration> {
                   hintText: 'Enter your First Name',
                   labelText: 'First Name',
                 ),
-                // validator: (String value) {
-                //   if (value.isEmpty) {
-                //     return 'First Name is Required';
-                //   } else
-                //     return null;
-                // },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'First Name is Required';
+                  } else
+                    return null;
+                },
                 onSaved: (String value) {
-                  _firstname = "123456";
-                //  _firstname = value;
+                  _firstname = value;
                 },
               ),
               TextFormField(
@@ -99,15 +98,14 @@ class _RegistrationState extends State<Registration> {
                   hintText: 'Enter your Last Name',
                   labelText: 'Last Name',
                 ),
-                // validator: (String value) {
-                //   if (value.isEmpty) {
-                //     return 'Last Name is Required';
-                //   } else
-                //     return null;
-                // },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Last Name is Required';
+                  } else
+                    return null;
+                },
                 onSaved: (String value) {
-                  _lastname = "123456";
-                 // _lastname = value;
+                  _lastname = value;
                 },
               ),
               TextFormField(
@@ -136,17 +134,16 @@ class _RegistrationState extends State<Registration> {
                   hintText: 'Enter your password',
                   labelText: 'Password',
                 ),
-                // validator: (String value) {
-                //   if (value.isEmpty) {
-                //     return 'Password is Required';
-                //   } else if (value.length < 6) {
-                //     return 'Minimum size is 6 characters';
-                //   } else
-                //     return null;
-                // },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Password is Required';
+                  } else if (value.length < 6) {
+                    return 'Minimum size is 6 characters';
+                  } else
+                    return null;
+                },
                 onSaved: (String value) {
-                  _password = "123456";
-                 // _password = value;
+                  _password = value;
                 },
               ),
               TextFormField(
@@ -156,17 +153,18 @@ class _RegistrationState extends State<Registration> {
                   hintText: 'Confirm password',
                   labelText: 'Confirm Password',
                 ),
-                // validator: (String value) {
-                //   if (value.isEmpty) {
-                //     return 'Confirm Password is Required';
-                //   } else if (value.length < 6) {
-                //     return 'Minimum size is 6 characters';
-                //   } else
-                //     return null;
-                // },
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'Confirm Password is Required';
+                  } else if (value.length < 6) {
+                    return 'Minimum size is 6 characters';
+                  } else if (value != _password) {
+                    return 'Passwords should match';
+                  } else
+                    return null;
+                },
                 onSaved: (String value) {
-                  _confirm = "123456";
-               //   _confirm = value;
+                  _confirm = value;
                 },
               ),
               Padding(
@@ -208,15 +206,12 @@ class _RegistrationState extends State<Registration> {
                 ),
                 validator: (String value) {
                   if (value.isEmpty) {
-
-                   // return 'Phone is Required';
-                    return null;
+                    return 'Phone is Required';
                   } else
                     return null;
                 },
                 onSaved: (String value) {
                   _phone = value;
-                  _phone = "87827877";
                 },
                 keyboardType: TextInputType.number,
               ),
@@ -247,41 +242,30 @@ class _RegistrationState extends State<Registration> {
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
-                      // if (_agree == false) {
-                      //   final snackBar = SnackBar(content: Text("Please accept the Agreement"));
-                      //   _key.currentState.showSnackBar(snackBar);
-                      //   return;
-                      // }
+                      if (_agree == false) {
+                        final snackBar = SnackBar(content: Text("Please accept the Agreement"));
+                        _key.currentState.showSnackBar(snackBar);
+                        return;
+                      }
                       _formKey.currentState.save();
-                      //print(_email + " " + _password);
-                     // print(_phone);
 
-                        final data = { "email" : _email, "password" : _password };
-                        Navigator.pop(context, data);
+                      ApiProvider()
+                          .register(_firstname, _lastname, _email, _password, _confirm, _phone, _gender)
+                          .then((val) {
+                        Fluttertoast.showToast(
+                          msg: val.userMsg,
+                        );
 
-
-                      // ApiProvider()
-                      //     .register(_firstname, _lastname, _email, _password, _confirm, _phone, _gender)
-                      //     .then((val) {
-                      //
-                      //   Fluttertoast.showToast(
-                      //       msg: val.userMsg,
-                      //   );
-                      //
-                      //   // if(val.userMsg == "Registration successfull")
-                      //   //   {
-                      //   //     final data = { "email" : _email, "password" : _password };
-                      //   //     Navigator.pop(context, data);
-                      //   //   }
-                      //
-                      // }).catchError((error, stackTrace) {
-                      //
-                      //   Fluttertoast.showToast(
-                      //     msg: error.toString(),
-                      //   );
-                      //
-                      // });
-
+                        if (val.userMsg == "Registration successfull") {
+                          print("tets");
+                          final data = {"email": _email, "password": _password};
+                          Navigator.pop(context, data);
+                        }
+                      }).catchError((error, stackTrace) {
+                        Fluttertoast.showToast(
+                          msg: error.toString(),
+                        );
+                      });
                     },
                   ),
                 ),

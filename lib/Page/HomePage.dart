@@ -2,6 +2,7 @@ import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_neostore/Api/apiprovider.dart';
 import 'package:flutter_neostore/Bloc/AddressBloc/address_bloc.dart';
 import 'package:flutter_neostore/Bloc/AddressBloc/address_events.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_neostore/Bloc/ProductBloc/product_events.dart';
 import 'package:flutter_neostore/Bloc/WrapperBloc/wrapper_bloc.dart';
 import 'package:flutter_neostore/Bloc/WrapperBloc/wrapper_events.dart';
 import 'package:flutter_neostore/Helpers/SharedPrefs.dart';
+import 'package:flutter_neostore/Modal/ResponseCart.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,6 +24,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int pos = 0;
+  int counter = 0;
 
   List list = [
     "assets/Beds.jpg",
@@ -30,41 +33,97 @@ class _HomeState extends State<Home> {
     "assets/Tables.jpg",
   ];
 
+  // count() async{
+  //   Future.delayed(const Duration(milliseconds: 3000), () {
+  //
+  //     setState(() {
+  //       counter = 8;
+  //     });
+  //   });
+  // }
+
+  count() async{
+    ResponseCart cart = await ApiProvider().cart();
+    setState(() {
+      if(cart.count!=null){
+        counter = cart.count;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    count();
+  }
+
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
+    final _key = GlobalKey<ScaffoldState>();
+
 
     return Scaffold(
+      key:_key,
       appBar: AppBar(
         title: InkWell(
           onTap: (){
-            Navigator.pushNamed(context, '/orders');
+            Navigator.pushNamed(context, '/address');
           },
           child: Text(
             "NeoStore",
-            style: TextStyle(fontSize: 30, color: Colors.white),
+            style: TextStyle(fontSize: 30, color: Colors.white,fontWeight: FontWeight.bold),
           ),
         ),
+        elevation: 0,
+
+        iconTheme: IconThemeData(color: Colors.white),
+
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/cart');
-              BlocProvider.of<CartBloc>(context).add(CartStarted());
-              // showDialog(
-              //   barrierDismissible: false,
-              //   context: context,
-              //   builder: (context){
-              //     return dialogLogout(context);
-              //   });
 
-            },
-          )
+          Padding(
+            padding: const EdgeInsets.only(top:3,right:12.0),
+            child: Stack(
+              children: <Widget>[
+                new IconButton(icon: Icon(
+                    Icons.shopping_cart,
+                  size: 35,
+                ), onPressed: () {
+                  Navigator.pushNamed(context, '/cart');
+                  BlocProvider.of<CartBloc>(context).add(CartStarted());
+                }),
+                counter != 0 ? new Positioned(
+                  right: 1,
+                  top: 1,
+                  child: new Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: new BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Text(
+                      counter.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ) : new Container()
+              ],
+            ),
+          ),
+
+
         ],
+
       ),
       body: ListView(
         children: [pager(), group()],
@@ -74,21 +133,26 @@ class _HomeState extends State<Home> {
   }
 
   Widget pager() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 10, right: 10),
+    return Container(
+      padding: EdgeInsets.only(top: 8.0, left: 7, right: 7,bottom: 13),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(bottomRight:  Radius.circular(25),bottomLeft:  Radius.circular(25)),
+        color: Theme.of(context).primaryColor,
+      ),
+
       child: Card(
-        elevation: 5,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           //side: BorderSide(color: Colors.white70, w),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(25),
         ),
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(25),
               child: CarouselSlider(
                 options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height * 0.30,
+                  height: MediaQuery.of(context).size.height * 0.34,
                   autoPlay: false,
                   viewportFraction: 1,
                   aspectRatio: 2.0,
@@ -131,7 +195,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -286,7 +350,7 @@ class _HomeState extends State<Home> {
             ),
             title: Text('My Orders'),
             onTap: () {
-              Fluttertoast.showToast(msg: "null");
+              Navigator.pushNamed(context, '/orders');
             },
           ),
           ListTile(
@@ -296,9 +360,14 @@ class _HomeState extends State<Home> {
             ),
             title: Text('Logout'),
             onTap: () {
-              //showLogoutDialogue(context);
-              SharedPrefs().clear();
-              BlocProvider.of<WrapperBloc>(context).add(AppStarted());
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context){
+                  return dialogLogout(context);
+                });
+              // SharedPrefs().clear();
+              // BlocProvider.of<WrapperBloc>(context).add(AppStarted());
             },
           ),
         ],
@@ -344,8 +413,8 @@ class _HomeState extends State<Home> {
         FlatButton(
             onPressed: () {
               SharedPrefs().clear();
-              BlocProvider.of<WrapperBloc>(context).add(AppStarted());
               Navigator.pop(context);
+              BlocProvider.of<WrapperBloc>(context).add(AppStarted());
             },
             child: Text(
               "Yes",
@@ -353,7 +422,7 @@ class _HomeState extends State<Home> {
             )),
         FlatButton(
             onPressed: () {
-              //BlocProvider.of<HomeBloc>(context).add(HomeLogoutPressed());
+              BlocProvider.of<WrapperBloc>(context).add(AppStarted());
               Navigator.pop(context);
             },
             child: Text(

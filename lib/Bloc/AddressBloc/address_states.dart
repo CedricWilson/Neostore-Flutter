@@ -19,6 +19,8 @@ class AddressSuccessful extends AddressStates {
   List<Object> get props => [task,fname,email];
 }
 class AddressEmpty extends AddressStates {
+  final String email;
+  AddressEmpty({@required this.email}) : assert(email != null);
   @override
   List<Object> get props => [];
 }

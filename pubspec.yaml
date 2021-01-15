@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.16.1
   path_provider: ^0.5.0+1
   moor_flutter: ^1.4.0
+  rating_dialog: ^1.0.0
 
 dev_dependencies:
   flutter_test:

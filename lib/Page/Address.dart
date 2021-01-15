@@ -9,8 +9,6 @@ import 'package:flutter_neostore/Database/database.dart';
 import 'package:flutter_neostore/Page/Details.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'Orders.dart';
-
 class Address extends StatefulWidget {
   @override
   _AddressState createState() => _AddressState();
@@ -44,28 +42,35 @@ class _AddressState extends State<Address> {
             },
           )
         ],
-        title: Text(
-          "Address",
-          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+        title: InkWell(
+          onTap: () {
+            BlocProvider.of<AddressBloc>(context).add(AddressDelete());
+          },
+          child: Text(
+            "Address",
+            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),
       backgroundColor: Color(0xFFf5f5f5),
       body: BlocConsumer<AddressBloc, AddressStates>(
-        listener:  (context,states){
-          if(states is OrderSuccess){
-
-            Navigator.pushNamed(context,'/orders' );
+        listener: (context, states) {
+          if (states is OrderSuccess) {
+            Navigator.pushNamed(context, '/orders');
           }
         },
         builder: (context, state) {
+
           if (state is AddressInitial) {
             BlocProvider.of<AddressBloc>(context).add(AddressStarted());
           } else if (state is AddressSuccessful) {
             name = state.fname;
+
             email = state.email;
             return adresslist(state.task);
-          } else if(state is AddressEmpty) {
+          } else if (state is AddressEmpty) {
+            email = state.email;
             return adressEmpty();
           }
           return Center(child: CupertinoActivityIndicator());
@@ -133,11 +138,11 @@ class _AddressState extends State<Address> {
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 onPressed: () {
-                  print("Pre-Order: " + selectedaddress + " " + email);
+
                   if (selectedindex == null || selectedaddress == null) {
                     Fluttertoast.showToast(msg: "Select an Address");
                   } else {
-                    print("Address: "+selectedaddress);
+
                     BlocProvider.of<AddressBloc>(context).add(Order(address: selectedaddress));
                   }
                 },
@@ -242,7 +247,6 @@ class _AddressState extends State<Address> {
                                 return;
                               }
                               _detailsform.currentState.save();
-
                               final task = new Task(address: address, email: email);
 
                               BlocProvider.of<AddressBloc>(context).add(AddressAdd(address: task));

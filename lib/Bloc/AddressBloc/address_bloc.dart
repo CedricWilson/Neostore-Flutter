@@ -16,16 +16,17 @@ class AddressBloc extends Bloc<AddressEvent, AddressStates> {
     if (event is AddressStarted) {
       User dot = await SharedPrefs().fetchUser();
       List<Task> task = await database.getAdds(dot.email);
-
-      if (task.length != 0 && dot.fname != null) {
+      if (task.length != 0 && dot.fname != null && dot.email!= null) {
         yield AddressSuccessful(task: task, fname: dot.fname, email: dot.email);
       } else {
-        yield AddressEmpty();
+        yield AddressEmpty(email: dot.email);
       }
     }
 
     if (event is AddressAdd) {
       User dot = await SharedPrefs().fetchUser();
+
+
       database.insertAdds(event.address);
 
       List<Task> task = await database.getAdds(dot.email);
@@ -46,6 +47,17 @@ class AddressBloc extends Bloc<AddressEvent, AddressStates> {
       }
 
      // yield OrderSuccess(msg: "Order Successful");
+    }
+
+    if(event is AddressDelete){
+      database.deleteAll();
+      User dot = await SharedPrefs().fetchUser();
+      List<Task> task = await database.getAdds(dot.email);
+      if (task.length != 0 && dot.fname != null) {
+        yield AddressSuccessful(task: task, fname: dot.fname, email: dot.email);
+      } else {
+        yield AddressEmpty();
+      }
     }
   }
 }

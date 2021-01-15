@@ -5,11 +5,12 @@ import 'package:flutter_neostore/Bloc/ProductBloc/product_bloc.dart';
 import 'package:flutter_neostore/Bloc/ProductBloc/product_events.dart';
 import 'package:flutter_neostore/Bloc/ProductBloc/product_states.dart';
 import 'package:flutter_neostore/Modal/ResponseProduct.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'Details.dart';
 
 class ProductsList extends StatefulWidget {
   final String id;
-  String gel = "1";
-
 
   ProductsList({Key key, @required this.id}) : super(key: key);
 
@@ -18,40 +19,47 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
-  String gel = "1";
+  String title = "id";
+
   Future<void> _pullRefresh() async {
-    BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: 1.toString()));
+    BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: widget.id.toString()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
-          elevation: 0,
+          // backgroundColor: Colors.blue,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            "Products",
+            title,
             style: TextStyle(color: Colors.white, fontSize: 30),
           ),
-          centerTitle: true,
+          //centerTitle: true,
         ),
+        backgroundColor: Color(0xFFf5f5f5),
         body: RefreshIndicator(
           onRefresh: _pullRefresh,
-          child:
-          BlocBuilder<ProductBloc, ProductStates>(
+          child: BlocBuilder<ProductBloc, ProductStates>(
+            // ignore: missing_return
             builder: (context, state) {
               if (state is ProductInitial) {
                 // print("State: Initial");
                 loading();
-                BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: gel));
+                BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: widget.id));
               } else if (state is ProductSuccessful) {
                 // print("State: Success");
                 if (state.product == null) {
                 } else {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      title = cat(state.product.data[1].productCategoryId);
+                    });
+                  });
                   return renderlist(state.product.data);
                 }
               } else if (state is ProductLoading) {
@@ -75,26 +83,60 @@ class _ProductsListState extends State<ProductsList> {
               Navigator.pushNamed(context, '/details', arguments: snapshot[index].id);
             },
             child: Card(
-              elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+              elevation: 1,
+              margin: EdgeInsets.only(top: 8.0, left: 5, right: 5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                height: query(context, 14),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 12),
+                child: Stack(
                   children: [
-                    Image(
-                      width: 100,
-                      height: 100,
-                      image: NetworkImage(snapshot[index].productImages),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Image(
+                          width: 110,
+                          height: 110,
+                          image: NetworkImage(snapshot[index].productImages),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0,top: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
+                            children: [
+                              Text(
+                                snapshot[index].name,
+                                style: TextStyle(color: Colors.black,fontSize: 14),
+                              ),
+
+                              Text(snapshot[index].producer),
+                              SizedBox(height: 10,),
+                              Text(format(snapshot[index].cost),
+                                style: TextStyle(color: Colors.red,fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(snapshot[index].name),
-                          Text(snapshot[index].producer),
-                          Text(snapshot[index].cost.toString()),
-                        ],
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: RatingBar.builder(
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          initialRating: snapshot[index].rating.toDouble(),
+                          onRatingUpdate: null,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemSize: 20,
+                        ),
                       ),
                     ),
                   ],
@@ -123,5 +165,23 @@ class _ProductsListState extends State<ProductsList> {
     return Center(
       child: CupertinoActivityIndicator(),
     );
+  }
+
+  String cat(int productCategoryId) {
+    switch (productCategoryId) {
+      case 1:
+        return "Table";
+        break;
+      case 2:
+        return "Chairs";
+        break;
+      case 3:
+        return "Sofas";
+        break;
+      case 4:
+        return "Beds";
+        break;
+    }
+    return "NULL";
   }
 }

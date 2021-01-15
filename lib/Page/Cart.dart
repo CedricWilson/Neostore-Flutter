@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Api/apiprovider.dart';
+import 'package:flutter_neostore/Bloc/AddressBloc/address_bloc.dart';
+import 'package:flutter_neostore/Bloc/AddressBloc/address_events.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_bloc.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_events.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_states.dart';
@@ -134,6 +136,7 @@ class _CartState extends State<Cart> with SingleTickerProviderStateMixin {
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
                         Navigator.pushNamed(context, '/address');
+                        BlocProvider.of<AddressBloc>(context).add(AddressStarted());
                       },
                       child: Text(
                         "CONTINUE",

@@ -159,10 +159,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocProvider.of<WrapperBloc>(context).add(AppStarted());
 
                         }
-                        // SharedPrefs().isLogged().then((result) {
-                        //   print("Satatus: "+result.toString());
-                        //   //Fluttertoast.showToast(msg: result);
-                        // });
                       }).catchError((error, stackTrace) {
                         print('error caught: $error');
                         Fluttertoast.showToast(msg: error.toString());
@@ -185,6 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           register();
           //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Registration()));
+          Navigator.pushNamed(context, '/signup');
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue,

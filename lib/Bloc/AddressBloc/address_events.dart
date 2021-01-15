@@ -24,3 +24,8 @@ class Order extends AddressEvent{
   @override
   List<Object> get props => [address];
 }
+
+class AddressDelete extends AddressEvent{
+  @override
+  List<Object> get props => [];
+}
