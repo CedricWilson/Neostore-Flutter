@@ -116,7 +116,7 @@ class _DetailsState extends State<Details> {
           future: ApiProvider().details(widget.id),
           builder: (context, AsyncSnapshot<ResponseDetails> snapshot) {
             if (snapshot.hasData) {
-              return Column(
+              return Stack(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   top(context, snapshot.data.data),
@@ -139,45 +139,58 @@ class _DetailsState extends State<Details> {
 
   Widget top(context, data) {
     Data list = data;
-    return Card(
-      margin: EdgeInsets.zero,
-            child: Container(
-        padding:
-            const EdgeInsets.only(top: 10.0, left: 12, right: 12, bottom: 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Text(
-              list.name,
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              "Category- " + cat(list.productCategoryId),
-              style: TextStyle(fontSize: 13),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Card(
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          //side: BorderSide(color: Colors.white70, w),
+          borderRadius: BorderRadius.circular(1),
+        ),
+        child: Container(
+          height: query(context, 11),
+          width: double.infinity,
+          // color: Colors.red,
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 10.0, left: 12, right: 12, bottom: 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  list.producer,
-                  style: TextStyle(fontSize: 16),
-                ),
-                RatingBar.builder(
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
+                  list.name,
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
-                  initialRating: list.rating.toDouble(),
-                  onRatingUpdate: null,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 20,
+                ),
+                Text(
+                  "Category- " + cat(list.productCategoryId),
+                  style: TextStyle(fontSize: 13),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      list.producer,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    RatingBar.builder(
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      initialRating: list.rating.toDouble(),
+                      onRatingUpdate: null,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 20,
+                    )
+                  ],
                 )
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -189,7 +202,10 @@ class _DetailsState extends State<Details> {
       price = list.cost;
       pricestate = true;
     }
-    return Expanded(
+    return Positioned(
+      top: query(context, 11),
+      bottom: query(context, 9),
+      width: width(context, 100),
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -240,7 +256,8 @@ class _DetailsState extends State<Details> {
               Flexible(
                 flex: 3,
                 child: Container(
-                          padding: const EdgeInsets.only(top: 3.0, bottom: 5),
+                  height: query(context, 11),
+                  padding: const EdgeInsets.only(top: 3.0, bottom: 5),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
@@ -263,8 +280,8 @@ class _DetailsState extends State<Details> {
                                   width: 4),
                             ),
                             child: Image(
-                              height: 80,
-                              width: 80,
+                              height: 100,
+                              width: 100,
                               image:
                                   NetworkImage(list.productImages[index].image),
                               fit: BoxFit.fill,
@@ -306,90 +323,101 @@ class _DetailsState extends State<Details> {
   Widget bottom(context, data) {
     Data list = data;
 
-    return Container(
-    
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-                children: [
-              Expanded(
-                child: FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      String token = prefs.getString('token') ?? '';
-                    
-                      showDialog(
-                          barrierDismissible: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(32.0))),
-                              content: Container(
-                                child: buyDialogue(context, list),
-                              ),
-                            );
-                          });
-                    },
-                    child: Text(
-                      "SUBMIT",
-                      style: TextStyle(color: Colors.white),
-                    )),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: FlatButton(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Colors.grey[350],
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible:
-                              true, // set to false if you want to force a rating
-                          builder: (context) {
-                            return RatingDialog(
-                              icon: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Image(
-                                  width: 300,
-                                  image:
-                                      NetworkImage(list.productImages[0].image),
-                                  fit: BoxFit.fill,
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+          height: query(context, 8),
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String token = prefs.getString('token') ?? '';
+
+                        // ApiProvider()
+                        //     .buy(token, list.id.toString(),4.toString())
+                        //     .then((value) {
+                        //   Fluttertoast.showToast(msg: value.userMsg);
+                        // }).catchError((error, stackTrace) {
+                        //   print('error caught: $error');
+                        // });
+
+                        showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(32.0))),
+                                content: Container(
+                                  child: buyDialogue(context, list),
                                 ),
-                              ),
-                              title: list.name,
-                              description: "Tap a star to set your rating",
-                              submitButton: "SUBMIT",
-                              accentColor:
-                                  Theme.of(context).primaryColor, // optional
-                              onSubmitPressed: (int rating) async {
-                                String msg =
-                                    await ApiProvider().rate(list.id, rating);
-                                Fluttertoast.showToast(msg: msg);
-                              },
-                            );
-                          });
-                    },
-                    child: Text(
-                      "RATE",
-                    )),
-              ),
-            ],
-          ),
-        ));
+                              );
+                            });
+                      },
+                      child: Text(
+                        "SUBMIT",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Colors.grey[350],
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            barrierDismissible:
+                                true, // set to false if you want to force a rating
+                            builder: (context) {
+                              return RatingDialog(
+                                icon: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Image(
+                                    width: 300,
+                                    image: NetworkImage(
+                                        list.productImages[0].image),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                title: list.name,
+                                description: "Tap a star to set your rating",
+                                submitButton: "SUBMIT",
+                                accentColor:
+                                    Theme.of(context).primaryColor, // optional
+                                onSubmitPressed: (int rating) async {
+                                  String msg =
+                                      await ApiProvider().rate(list.id, rating);
+                                  Fluttertoast.showToast(msg: msg);
+                                },
+                              );
+                            });
+                      },
+                      child: Text(
+                        "RATE",
+                      )),
+                ),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget buyDialogue(BuildContext context, Data list) {
@@ -454,15 +482,13 @@ class _DetailsState extends State<Details> {
                   ),
                   SizedBox(height: 30),
                   Container(
-                   // height: 50,
+                    height: 50,
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                     // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Expanded(
                           child: FlatButton(
-                            padding: EdgeInsets.symmetric(vertical: 16),
                             color: Theme.of(context).primaryColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
@@ -497,7 +523,6 @@ class _DetailsState extends State<Details> {
                         SizedBox(width: 10),
                         Expanded(
                           child: FlatButton(
-                            padding: EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
                             ),

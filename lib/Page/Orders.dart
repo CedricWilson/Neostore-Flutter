@@ -13,47 +13,53 @@ class Orders extends StatefulWidget {
 class _OrdersState extends State<Orders> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/homescreen', (route) => false),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(context, '/homescreen', (route) => false);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/homescreen', (route) => false),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                print("hi");
+              },
+            )
+          ],
+          title: Text(
+            "My Orders",
+            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+          ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              print("hi");
-            },
-          )
-        ],
-        title: Text(
-          "My Orders",
-          style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      ),
-      backgroundColor: Color(0xFFf5f5f5),
-      body: FutureBuilder(
-          future: ApiProvider().orderlist(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              ResponseOrder data = snapshot.data;
+        backgroundColor: Color(0xFFf5f5f5),
+        body: FutureBuilder(
+            future: ApiProvider().orderlist(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                ResponseOrder data = snapshot.data;
 
-              return renderlist(data);
-            }
-            if (snapshot.hasError) {
-              return Container(
-                width: 0,
-                height: 0,
-              );
-            }
-            print("hi2");
-            return CupertinoActivityIndicator();
-          }),
+                return renderlist(data);
+              }
+              if (snapshot.hasError) {
+                return Container(
+                  width: 0,
+                  height: 0,
+                );
+              }
+              print("hi2");
+              return CupertinoActivityIndicator();
+            }),
+      ),
     );
   }
 

@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.act.flutter_neostore">
+    <uses-permission android:name="android.permission.CAMERA" />
    <application
        android:usesCleartextTraffic="true"
+
+       android:requestLegacyExternalStorage="true"
         android:label="NeoStore"
         android:icon="@mipmap/ic_launcher">
         <activity

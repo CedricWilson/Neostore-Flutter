@@ -27,49 +27,55 @@ class _ProductsListState extends State<ProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          // backgroundColor: Colors.blue,
-          elevation: 5,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+    return WillPopScope(
+      onWillPop: () async {
+        //Navigator.pushNamed(context, '/cart');
+        return false;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            // backgroundColor: Colors.blue,
+            elevation: 5,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              title,
+              style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+            //centerTitle: true,
           ),
-          title: Text(
-            title,
-            style: TextStyle(color: Colors.white, fontSize: 30),
-          ),
-          //centerTitle: true,
-        ),
-        backgroundColor: Color(0xFFf5f5f5),
-        body: RefreshIndicator(
-          onRefresh: _pullRefresh,
-          child: BlocBuilder<ProductBloc, ProductStates>(
-            // ignore: missing_return
-            builder: (context, state) {
-              if (state is ProductInitial) {
-                // print("State: Initial");
-                loading();
-                BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: widget.id));
-              } else if (state is ProductSuccessful) {
-                // print("State: Success");
-                if (state.product == null) {
-                } else {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    setState(() {
-                      title = cat(state.product.data[1].productCategoryId);
+          backgroundColor: Color(0xFFf5f5f5),
+          body: RefreshIndicator(
+            onRefresh: _pullRefresh,
+            child: BlocBuilder<ProductBloc, ProductStates>(
+              // ignore: missing_return
+              builder: (context, state) {
+                if (state is ProductInitial) {
+                  // print("State: Initial");
+                  loading();
+                  BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: widget.id));
+                } else if (state is ProductSuccessful) {
+                  // print("State: Success");
+                  if (state.product == null) {
+                  } else {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        title = cat(state.product.data[1].productCategoryId);
+                      });
                     });
-                  });
-                  return renderlist(state.product.data);
+                    return renderlist(state.product.data);
+                  }
+                } else if (state is ProductLoading) {
+                  //  print("State: Loading");
+                  return loading();
                 }
-              } else if (state is ProductLoading) {
-                //  print("State: Loading");
-                return loading();
-              }
-              return empty();
-            },
-          ),
-        ));
+                return empty();
+              },
+            ),
+          )),
+    );
   }
 
   Widget renderlist(List<Data> snapshot) {

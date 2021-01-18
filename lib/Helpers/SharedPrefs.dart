@@ -9,6 +9,18 @@ class SharedPrefs {
     prefs.setString('lname', data.firstName);
     prefs.setString('email', data.email);
     prefs.setString('token', data.accessToken);
+    prefs.setString('image', data.profilePic);
+    prefs.setString('bday', data.dob);
+  }
+
+  setUser2(String fname,String lname,String email,String image,String bday, String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('fname', fname);
+  prefs.setString('lname', lname);
+  prefs.setString('email', email);
+  prefs.setString('token', token);
+  prefs.setString('image', image);
+  prefs.setString('bday', bday);
   }
 
   token() async {
@@ -36,6 +48,8 @@ class SharedPrefs {
       lname: prefs.getString('lname'),
       email: prefs.getString('email'),
       token: prefs.getString('token'),
+      image: prefs.getString('image'),
+      bday: prefs.getString('bday'),
     );
   }
 

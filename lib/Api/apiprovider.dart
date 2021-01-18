@@ -5,6 +5,7 @@ import 'package:flutter_neostore/Helpers/SharedPrefs.dart';
 import 'package:flutter_neostore/Modal/ResponseBuy.dart';
 import 'package:flutter_neostore/Modal/ResponseCart.dart';
 import 'package:flutter_neostore/Modal/ResponseDetails.dart';
+import 'package:flutter_neostore/Modal/ResponseEditProfile.dart';
 import 'package:flutter_neostore/Modal/ResponseLogin.dart';
 import 'package:flutter_neostore/Modal/ResponseOrder.dart';
 import 'package:flutter_neostore/Modal/ResponseOrderDetail.dart';
@@ -17,12 +18,46 @@ class ApiProvider {
   Dio _dio;
 
   ApiProvider() {
-    BaseOptions options = BaseOptions(receiveTimeout: 5000, connectTimeout: 5000);
+    BaseOptions options =
+        BaseOptions(receiveTimeout: 5000, connectTimeout: 5000);
     _dio = Dio(options);
   }
 
-  Future<String> rate(int id, int rating) async {
+  Future<ResponseEditProfile> editprofile(String fname,String lname,String email,String phone,String image,String bday) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
 
+    String append = "users/update";
+    FormData formData = new FormData.fromMap({
+      "email": email,
+      "dob": bday,
+      "phone_no": phone,
+      "profile_pic": image,
+      "first_name": fname,
+      "last_name": lname,
+    });
+
+ //   print(email+" "+bday+" "+phone+" "+image[0]+" "+fname+" "+lname+" "+token);
+//    print(image);
+    try {
+      Response response = await _dio.post(
+        _base + append,
+        data: formData,
+        options: Options(
+          headers: {"access_token": token},
+        ),
+      );
+      var parsed = json.decode(response.data);
+      return ResponseEditProfile.fromJson(parsed);
+    } on DioError catch (e) {
+      print(e.message);
+      print("API: "+e.response.toString());
+      var parsed = json.decode(e.response.data);
+      throw parsed["user_msg"];
+    }
+  }
+
+  Future<String> rate(int id, int rating) async {
     String append = "products/setRating";
     FormData formData = new FormData.fromMap({
       "product_id": id,
@@ -215,7 +250,8 @@ class ApiProvider {
     String append = "products/getDetail";
     //print(_base+append);
     try {
-      Response response = await _dio.get(_base + append, queryParameters: {"product_id": id});
+      Response response =
+          await _dio.get(_base + append, queryParameters: {"product_id": id});
       // print(response.data[10]);
       var parsed = json.decode(response.data);
       // print("Response: " + parsed['data']['name'].toString());
@@ -232,21 +268,30 @@ class ApiProvider {
     String append = "products/getList";
     //print(_base+append);
     try {
-      Response response = await _dio.get(_base + append, queryParameters: {"product_category_id": id});
+      Response response = await _dio
+          .get(_base + append, queryParameters: {"product_category_id": id});
       // print(response.data[10]);
+     // print("Response: " + response.toString());
       var parsed = json.decode(response.data);
-      //print("Response: " + parsed['status'].toString());
+     // print("Response: " + parsed['status'].toString());
       return ResponseProduct.fromJson(parsed);
     } on DioError catch (e) {
+     // print("Message: "+e.message);
       // print("Message: "+e.message);
-      print("DioError: " + e.response.statusMessage);
+     // print("DioError: " + e.response.statusMessage);
       var parsed = json.decode(e.response.data);
       throw e.message;
     }
   }
 
-  Future<ResponseRegistration> register(String fname, String lname, String email, String password, String confirm,
-      String phone, String gender) async {
+  Future<ResponseRegistration> register(
+      String fname,
+      String lname,
+      String email,
+      String password,
+      String confirm,
+      String phone,
+      String gender) async {
     String append = "users/register";
     //print(_base+append);
     FormData formData = new FormData.fromMap({

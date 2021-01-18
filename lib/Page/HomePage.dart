@@ -3,8 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Api/apiprovider.dart';
-import 'package:flutter_neostore/Bloc/AddressBloc/address_bloc.dart';
-import 'package:flutter_neostore/Bloc/AddressBloc/address_events.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_bloc.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_events.dart';
 import 'package:flutter_neostore/Bloc/ProductBloc/product_bloc.dart';
@@ -13,18 +11,23 @@ import 'package:flutter_neostore/Bloc/WrapperBloc/wrapper_bloc.dart';
 import 'package:flutter_neostore/Bloc/WrapperBloc/wrapper_events.dart';
 import 'package:flutter_neostore/Helpers/SharedPrefs.dart';
 import 'package:flutter_neostore/Modal/ResponseCart.dart';
+import 'package:flutter_neostore/Modal/User.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   int pos = 0;
   int counter = 0;
+  String name = "Name";
+  String email = "email";
+  String image = "image";
 
   List list = [
     "assets/Beds.jpg",
@@ -33,29 +36,45 @@ class _HomeState extends State<Home> {
     "assets/Tables.jpg",
   ];
 
-  // count() async{
-  //   Future.delayed(const Duration(milliseconds: 3000), () {
-  //
-  //     setState(() {
-  //       counter = 8;
-  //     });
-  //   });
-  // }
-
-  count() async{
+  count() async {
     ResponseCart cart = await ApiProvider().cart();
     setState(() {
-      if(cart.count!=null){
+      if (cart.count != null) {
         counter = cart.count;
       }
     });
+  }
+
+  userRefresh() async {
+    User user = await SharedPrefs().fetchUser();
+
+    if (user != null) {
+      setState(() {
+        name = user.fname + " " + user.lname;
+        email = user.email;
+        image = user.image;
+      });
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     count();
+    userRefresh();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    //print(state);
   }
 
   @override
@@ -63,67 +82,67 @@ class _HomeState extends State<Home> {
     FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
     final _key = GlobalKey<ScaffoldState>();
 
-
     return Scaffold(
-      key:_key,
+      key: _key,
       appBar: AppBar(
         title: InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, '/address');
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              '/editprofile',
+            ).then((value) => userRefresh());
           },
           child: Text(
             "NeoStore",
-            style: TextStyle(fontSize: 30, color: Colors.white,fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0,
-
         iconTheme: IconThemeData(color: Colors.white),
-
         centerTitle: true,
         actions: <Widget>[
-
           Padding(
-            padding: const EdgeInsets.only(top:3,right:12.0),
-            child: Stack(
-              children: <Widget>[
-                new IconButton(icon: Icon(
+            padding: const EdgeInsets.only(top: 3, right: 12.0),
+            child: Stack(children: <Widget>[
+              new IconButton(
+                  icon: Icon(
                     Icons.shopping_cart,
-                  size: 35,
-                ), onPressed: () {
-                  Navigator.pushNamed(context, '/cart');
-                  BlocProvider.of<CartBloc>(context).add(CartStarted());
-                }),
-                counter != 0 ? new Positioned(
-                  right: 1,
-                  top: 1,
-                  child: new Container(
-                    padding: EdgeInsets.all(2),
-                    decoration: new BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    constraints: BoxConstraints(
-                      minWidth: 20,
-                      minHeight: 20,
-                    ),
-                    child: Text(
-                      counter.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    size: 35,
                   ),
-                ) : new Container()
-              ],
-            ),
-          ),
+                  onPressed: () async {
+                    Navigator.pushNamed(context, '/cart');
+                    BlocProvider.of<CartBloc>(context).add(CartStarted());
 
 
+                  }),
+              counter != 0
+                  ? new Positioned(
+                      right: 1,
+                      top: 1,
+                      child: new Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                        child: Text(
+                          counter.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : new Container()
+            ]),
+          )
         ],
-
       ),
       body: ListView(
         children: [pager(), group()],
@@ -134,12 +153,11 @@ class _HomeState extends State<Home> {
 
   Widget pager() {
     return Container(
-      padding: EdgeInsets.only(top: 8.0, left: 7, right: 7,bottom: 13),
+      padding: EdgeInsets.only(top: 8.0, left: 7, right: 7, bottom: 13),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(bottomRight:  Radius.circular(25),bottomLeft:  Radius.circular(25)),
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
         color: Theme.of(context).primaryColor,
       ),
-
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -258,17 +276,22 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(50.0),
-                      child: Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill),
-                    ),
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: image.isEmpty
+                            ? Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill)
+                            : Image(
+                          width: 100,
+                          height: 100,
+                          image: NetworkImage(image),
+                        ),),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 9),
                       child: Text(
-                        "Name",
+                        name,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Text("email", style: TextStyle(color: Colors.white))
+                    Text(email, style: TextStyle(color: Colors.white))
                   ],
                 )),
           ),
@@ -328,9 +351,12 @@ class _HomeState extends State<Home> {
               Icons.person,
               color: Colors.black,
             ),
-            title: Text('Account'),
+            title: Text('Edit Profiles'),
             onTap: () {
-              Fluttertoast.showToast(msg: "null");
+              Navigator.pushNamed(
+                context,
+                '/editprofile',
+              ).then((value) => userRefresh());
             },
           ),
           ListTile(
@@ -361,11 +387,11 @@ class _HomeState extends State<Home> {
             title: Text('Logout'),
             onTap: () {
               showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context){
-                  return dialogLogout(context);
-                });
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return dialogLogout(context);
+                  });
               // SharedPrefs().clear();
               // BlocProvider.of<WrapperBloc>(context).add(AppStarted());
             },
@@ -401,7 +427,7 @@ class _HomeState extends State<Home> {
   void furniture(int i) {
     // print("Furniture: "+i.toString());
     BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: i.toString()));
-    Navigator.pushNamed(context, '/products', arguments: i.toString());
+    Navigator.pushNamed(context, '/products', arguments: i.toString()).then((value) => count());
   }
 
   Widget dialogLogout(BuildContext context) {
