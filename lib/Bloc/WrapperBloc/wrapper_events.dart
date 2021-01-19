@@ -7,3 +7,8 @@ class AppStarted extends WrapperEvent{
   @override
   List<Object> get props => [];
 }
+
+class LoginSuccess extends WrapperEvent{
+  @override
+  List<Object> get props => [];
+}

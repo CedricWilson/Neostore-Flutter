@@ -89,7 +89,8 @@ class _RegistrationState extends State<Registration> {
                     return null;
                 },
                 onSaved: (String value) {
-                  _firstname = value;
+                    _firstname = value;
+
                 },
               ),
               TextFormField(
@@ -98,14 +99,10 @@ class _RegistrationState extends State<Registration> {
                   hintText: 'Enter your Last Name',
                   labelText: 'Last Name',
                 ),
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return 'Last Name is Required';
-                  } else
-                    return null;
-                },
+
                 onSaved: (String value) {
-                  _lastname = value;
+                   _lastname = value;
+
                 },
               ),
               TextFormField(
@@ -143,7 +140,8 @@ class _RegistrationState extends State<Registration> {
                     return null;
                 },
                 onSaved: (String value) {
-                  _password = value;
+                   _password = value;
+
                 },
               ),
               TextFormField(
@@ -164,7 +162,8 @@ class _RegistrationState extends State<Registration> {
                     return null;
                 },
                 onSaved: (String value) {
-                  _confirm = value;
+                    _confirm = value;
+
                 },
               ),
               Padding(
@@ -249,6 +248,7 @@ class _RegistrationState extends State<Registration> {
                       }
                       _formKey.currentState.save();
 
+
                       ApiProvider()
                           .register(_firstname, _lastname, _email, _password, _confirm, _phone, _gender)
                           .then((val) {
@@ -256,7 +256,7 @@ class _RegistrationState extends State<Registration> {
                           msg: val.userMsg,
                         );
 
-                        if (val.userMsg == "Registration successfull") {
+                        if (val.status == 200) {
                           print("tets");
                           final data = {"email": _email, "password": _password};
                           Navigator.pop(context, data);

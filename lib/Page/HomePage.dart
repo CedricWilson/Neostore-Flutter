@@ -1,5 +1,4 @@
-import 'package:carousel_indicator/carousel_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Api/apiprovider.dart';
@@ -12,10 +11,10 @@ import 'package:flutter_neostore/Bloc/WrapperBloc/wrapper_events.dart';
 import 'package:flutter_neostore/Helpers/SharedPrefs.dart';
 import 'package:flutter_neostore/Modal/ResponseCart.dart';
 import 'package:flutter_neostore/Modal/User.dart';
+import 'package:flutter_neostore/Navigation/Details.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,6 +27,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   String name = "Name";
   String email = "email";
   String image = "image";
+
+  List data = [
+    "assets/slider_bed.jpg",
+    "assets/slider_chair.jpg",
+    "assets/slider_sofa.jpg",
+    "assets/slider_table.jpg"
+  ];
 
   List list = [
     "assets/Beds.jpg",
@@ -112,8 +118,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   onPressed: () async {
                     Navigator.pushNamed(context, '/cart');
                     BlocProvider.of<CartBloc>(context).add(CartStarted());
-
-
                   }),
               counter != 0
                   ? new Positioned(
@@ -145,14 +149,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         ],
       ),
       body: ListView(
-        children: [pager(), group()],
+        children: [pager(context), group()],
       ),
       drawer: drawer(),
     );
   }
 
-  Widget pager() {
+  Widget pager(BuildContext context) {
     return Container(
+      height: query(context, 36),
       padding: EdgeInsets.only(top: 8.0, left: 7, right: 7, bottom: 13),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
@@ -161,59 +166,42 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
-          //side: BorderSide(color: Colors.white70, w),
           borderRadius: BorderRadius.circular(25),
         ),
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height * 0.34,
-                  autoPlay: false,
-                  viewportFraction: 1,
-                  aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      pos = index;
-                    });
-                  },
-                ),
-                items: [
-                  "assets/slider_bed.jpg",
-                  "assets/slider_chair.jpg",
-                  "assets/slider_sofa.jpg",
-                  "assets/slider_table.jpg"
-                ].map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: Image(
-                            image: AssetImage(i),
-                            fit: BoxFit.fill,
-                          ));
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: CarouselIndicator(
-                    count: 4,
-                    index: pos,
-                    activeColor: Colors.blue,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+                //TODO
+                borderRadius: BorderRadius.circular(15),
+                child: Carousel(
+                  images: [
+                    for (var i in data) Image.asset(i.toString(), width: 180, height: 180, fit: BoxFit.fill),
+                  ],
+                  dotSize: 13.0,
+                  autoplay: false,
+                  dotSpacing: 45.0,
+                  dotColor: Colors.white,
+                  dotIncreaseSize: 1.7,
+                  dotVerticalPadding: 10,
+                  indicatorBgPadding: 5.0,
+                  animationCurve: Curves.fastOutSlowIn,
+                  dotBgColor: Colors.transparent,
+                  borderRadius: true,
+                )),
+            // Positioned.fill(
+            //   child: Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(bottom: 15.0),
+            //       child: CarouselIndicator(
+            //         count: 4,
+            //         index: pos,
+            //         activeColor: Colors.blue,
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),
@@ -276,14 +264,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: image.isEmpty
-                            ? Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill)
-                            : Image(
-                          width: 100,
-                          height: 100,
-                          image: NetworkImage(image),
-                        ),),
+                      borderRadius: BorderRadius.circular(50.0),
+                      child: image.isEmpty
+                          ? Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill)
+                          : Image(
+                              width: 100,
+                              height: 100,
+                              image: NetworkImage(image),
+                            ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 9),
                       child: Text(
@@ -392,8 +381,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   builder: (context) {
                     return dialogLogout(context);
                   });
-              // SharedPrefs().clear();
-              // BlocProvider.of<WrapperBloc>(context).add(AppStarted());
             },
           ),
         ],
@@ -438,8 +425,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       actions: [
         FlatButton(
             onPressed: () {
-              SharedPrefs().clear();
               Navigator.pop(context);
+              SharedPrefs().clear();
               BlocProvider.of<WrapperBloc>(context).add(AppStarted());
             },
             child: Text(
@@ -488,3 +475,35 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     );
   }
 }
+
+// CarouselSlider(
+//   options: CarouselOptions(
+//     height: MediaQuery.of(context).size.height * 0.30,
+//     autoPlay: false,
+//     viewportFraction: 1,
+//     aspectRatio: 2.0,
+//     onPageChanged: (index, reason) {
+//       setState(() {
+//         pos = index;
+//       });
+//     },
+//   ),
+//   items: [
+//     "assets/slider_bed.jpg",
+//     "assets/slider_chair.jpg",
+//     "assets/slider_sofa.jpg",
+//     "assets/slider_table.jpg"
+//   ].map((i) {
+//     return Builder(
+//       builder: (BuildContext context) {
+//         return Container(
+//             width: MediaQuery.of(context).size.width,
+//             decoration: BoxDecoration(color: Colors.white),
+//             child: Image(
+//               image: AssetImage(i),
+//               fit: BoxFit.fill,
+//             ));
+//       },
+//     );
+//   }).toList(),
+// ),

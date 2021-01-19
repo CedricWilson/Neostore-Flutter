@@ -65,20 +65,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-//TEXT COLORS DARK(757575)
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("data"),
-      ),
-    );
-  }
-}

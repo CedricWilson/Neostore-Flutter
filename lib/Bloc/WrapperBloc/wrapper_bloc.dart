@@ -33,5 +33,9 @@ class WrapperBloc extends Bloc<WrapperEvent, WrapperStates> {
         yield UnAuthState();
       }
     }
+
+    if(event is LoginSuccess){
+      yield AuthSuccessful();
+    }
   }
 }

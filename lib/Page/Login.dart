@@ -33,20 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       List list = result.values.toList();
+      print(list[0]);
       _defemail.text = list[0];
       _defpass.text = list[1];
     } catch (e) {}
   }
 
-  _loadCounter() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(SharedPrefs().token());
-    //token = SharedPrefs().token();
-    //token = (prefs.getString('token') ?? '');
-    // if (token.isNotEmpty) {
-    //   print(token);
-    // }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
                       _formKey.currentState.save();
-                      
+
                       print(_email + " " + _password);
 
                       ApiProvider().login(_email, _password).then((val) {
@@ -156,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Data data = val.data;
                           SharedPrefs().setUser(data);
                           Fluttertoast.showToast(msg: "Login Successful");
-                          BlocProvider.of<WrapperBloc>(context).add(AppStarted());
+                          BlocProvider.of<WrapperBloc>(context).add(LoginSuccess());
 
                         }
                       }).catchError((error, stackTrace) {
@@ -181,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           register();
           //Navigator.of(context).push(MaterialPageRoute(builder: (context) => Registration()));
-          Navigator.pushNamed(context, '/signup');
+         // Navigator.pushNamed(context, '/signup');
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue,

@@ -7,8 +7,6 @@ import 'package:flutter_neostore/Page/Login.dart';
 import 'package:flutter_neostore/Page/splash_screen.dart';
 
 import 'Bloc/WrapperBloc/wrapper_events.dart';
-import 'Navigation/routes.dart';
-
 
 class Wrapper extends StatefulWidget {
   @override
@@ -18,31 +16,27 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<WrapperBloc, WrapperStates>(
-        listener:  (context,states){
-          if(states is WrapInitial){
-           // print("state: Auth Initial");
-            BlocProvider.of<WrapperBloc>(context).add(AppStarted());
-          }
-        },
-        builder: (context, states){// ignore: missing_return
-          if(states is WrapInitial){
-            //print("Building AuthInitial");
-            BlocProvider.of<WrapperBloc>(context).add(AppStarted());
-           // print("Splash");
+    return BlocConsumer<WrapperBloc, WrapperStates>(listener: (context, states) {
+      if (states is WrapInitial) {
+        // print("state: Auth Initial");
+        BlocProvider.of<WrapperBloc>(context).add(AppStarted());
+      }
+      // ignore: missing_return
+    }, builder: (context, states) {
 
-            return SplashScreen();
-          }
-          if(states is AuthSuccessful){
-           // print("AuthSuccessful");
-            return Home();
-          }
-          if(states is UnAuthState){
-          //  print("UnAuthState");
-            return LoginScreen();
-          }
-        }
+      if (states is WrapInitial) {
+        BlocProvider.of<WrapperBloc>(context).add(AppStarted());
+        return SplashScreen();
+      }
+      if (states is AuthSuccessful) {
+        print("AuthSuccessful");
 
-    );
+        return Home();
+      }
+      if (states is UnAuthState) {
+        print("UnAuthState");
+        return LoginScreen();
+      }
+    });
   }
 }

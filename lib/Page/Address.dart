@@ -25,6 +25,7 @@ class _AddressState extends State<Address> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
@@ -187,21 +188,16 @@ class _AddressState extends State<Address> {
           children: [
             SizedBox(height: 20),
             Text(
-              "Address",
+              "Address:",
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 30),
-            Text(
-              "Quantity:",
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 10),
             Form(
               key: _detailsform,
               child: Column(
                 children: [
                   Container(
-                    width: 200,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: TextFormField(
                       decoration: new InputDecoration(
                         enabledBorder: const OutlineInputBorder(

@@ -42,7 +42,7 @@ class _DetailsState extends State<Details> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     count();
   }
@@ -55,6 +55,7 @@ class _DetailsState extends State<Details> {
 
   Scaffold buildScaffold(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           elevation: 0,
           actions: [
@@ -238,7 +239,7 @@ class _DetailsState extends State<Details> {
                 ),
               ),
               Flexible(
-                flex: 3,
+                flex: 2,
                 child: Container(
                           padding: const EdgeInsets.only(top: 3.0, bottom: 5),
                   child: ListView.builder(
@@ -307,7 +308,7 @@ class _DetailsState extends State<Details> {
     Data list = data;
 
     return Container(
-    
+
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -321,10 +322,7 @@ class _DetailsState extends State<Details> {
                     ),
                     color: Theme.of(context).primaryColor,
                     onPressed: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      String token = prefs.getString('token') ?? '';
-                    
+
                       showDialog(
                           barrierDismissible: true,
                           context: context,
@@ -340,7 +338,7 @@ class _DetailsState extends State<Details> {
                           });
                     },
                     child: Text(
-                      "SUBMIT",
+                      "BUY",
                       style: TextStyle(color: Colors.white),
                     )),
               ),
@@ -456,7 +454,7 @@ class _DetailsState extends State<Details> {
                   Container(
                    // height: 50,
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    //  mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                      // crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
