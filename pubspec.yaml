@@ -34,7 +34,6 @@ dependencies:
   flutter_bloc: ^6.1.1
   equatable: ^1.2.5
   carousel_pro: ^1.0.0
-  carousel_indicator: ^1.0.5
   flutter_statusbarcolor: ^0.2.3
   font_awesome_flutter: ^8.11.0
   animated_splash_screen: ^1.0.1+2
@@ -46,16 +45,22 @@ dependencies:
   moor_flutter: ^1.4.0
   rating_dialog: ^1.0.0
   image_picker: ^0.6.7+21
+  page_transition: "^1.1.7+6"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   moor_generator: ^1.4.0
+  flutter_native_splash: ^0.2.7
   build_runner:
   flutter_launcher_name: "^0.0.1"
 #  integration_test:
 #    sdk: flutter
 
+flutter_native_splash:
+  color: "#30B1F2"
+  image: assets/splash.png
+  fill: false
 
 flutter_launcher_name:
   name: "NeoStore"

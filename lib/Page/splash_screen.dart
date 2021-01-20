@@ -8,7 +8,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("hello"),
+      body: Center(
+        child: new Image.asset('assets/profile.png'),
+      ),
     );
   }
 }

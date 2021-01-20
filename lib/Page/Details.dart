@@ -84,14 +84,14 @@ class _DetailsState extends State<Details> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             constraints: BoxConstraints(
-                              minWidth: 20,
-                              minHeight: 20,
+                              minWidth: width(context, 5),
+                              minHeight: width(context, 5),
                             ),
                             child: Text(
                               counter.toString(),
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: width(context, 4),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -200,6 +200,7 @@ class _DetailsState extends State<Details> {
         child: Container(
           padding:
               const EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 3),
+          //TODO make listview
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,6 +252,7 @@ class _DetailsState extends State<Details> {
                         padding: const EdgeInsets.all(2.0),
                         child: GestureDetector(
                           onTap: () {
+
                             setState(() {
                               selectedIndex = index;
                             });

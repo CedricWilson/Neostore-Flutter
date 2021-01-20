@@ -29,12 +29,11 @@ class _WrapperState extends State<Wrapper> {
         return SplashScreen();
       }
       if (states is AuthSuccessful) {
-        print("AuthSuccessful");
-
+      //  print("AuthSuccessful");
         return Home();
       }
       if (states is UnAuthState) {
-        print("UnAuthState");
+       // print("UnAuthState");
         return LoginScreen();
       }
     });

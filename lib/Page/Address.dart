@@ -106,7 +106,7 @@ class _AddressState extends State<Address> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                         border: Border.all(
-                            color: index == selectedindex ? Theme.of(context).primaryColor : Colors.white,
+                            color: index == selectedindex ? Theme.of(context).primaryColor : Colors.grey[200],
                             width: 6),
                         color: Colors.white,
                       ),

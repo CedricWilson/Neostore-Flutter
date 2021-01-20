@@ -42,6 +42,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     "assets/Tables.jpg",
   ];
 
+
+
   count() async {
     ResponseCart cart = await ApiProvider().cart();
     setState(() {
@@ -130,14 +132,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         constraints: BoxConstraints(
-                          minWidth: 20,
-                          minHeight: 20,
+                          //TODO
+                          minWidth: query(context, 2.5),
+                          minHeight: query(context, 2.5),
                         ),
                         child: Text(
                           counter.toString(),
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: width(context, 4),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -265,7 +268,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-                      child: image.isEmpty
+                      child: image == null
                           ? Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill)
                           : Image(
                               width: 100,
@@ -355,7 +358,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             title: Text('Store Locator'),
             onTap: () {
-              Fluttertoast.showToast(msg: "null");
+              Fluttertoast.showToast(msg: "Under Construction");
             },
           ),
           ListTile(

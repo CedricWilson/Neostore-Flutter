@@ -10,6 +10,7 @@ import 'package:flutter_neostore/Navigation/routes.dart';
 import 'package:flutter_neostore/Page/HomePage.dart';
 import 'package:flutter_neostore/Page/Registration.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void register() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Registration()),
+      PageTransition(type: PageTransitionType.scale,duration: Duration(milliseconds: 700), alignment: Alignment.bottomRight, child: Registration()),
     );
 
     try {
@@ -43,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       key: _key,
       // appBar: AppBar(
       //   title: Text("Login"),

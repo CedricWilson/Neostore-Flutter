@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       theme: ThemeData(
           fontFamily: 'Varela',
           primaryColor: Color(0xFF30B1F2),

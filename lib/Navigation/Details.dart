@@ -573,7 +573,7 @@ class _DetailsState extends State<Details> {
   }
 }
 
-query(BuildContext context, int i) {
+query(BuildContext context, double i) {
   double k = i / 100;
   return MediaQuery.of(context).size.height * k;
 }

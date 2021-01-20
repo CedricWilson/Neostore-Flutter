@@ -10,6 +10,7 @@ import 'package:flutter_neostore/Page/Orders.dart';
 import 'package:flutter_neostore/Page/ProductList.dart';
 import 'package:flutter_neostore/Page/Registration.dart';
 import 'package:flutter_neostore/wrapper.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,16 +26,23 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Wrapper());
       case RoutingConstants.products:
         String id = settings.arguments;
-        return MaterialPageRoute(builder: (_) => ProductsList(id: id));
+        return PageTransition(
+            child: ProductsList(id: id), type: PageTransitionType.size, alignment: Alignment.center);
       case RoutingConstants.details:
         int id = settings.arguments;
-        return MaterialPageRoute(builder: (_) => Details(id: id));
+        return PageTransition(
+            child: Details(id: id),
+            type: PageTransitionType.rightToLeftWithFade,
+            duration: Duration(milliseconds: 400));
       case RoutingConstants.cart:
-        return MaterialPageRoute(builder: (_) => Cart());
+        return PageTransition(
+            child: Cart(), type: PageTransitionType.topToBottom);
       case RoutingConstants.address:
-        return MaterialPageRoute(builder: (_) => Address());
+        return PageTransition(
+            child: Address(), type: PageTransitionType.rightToLeft);
       case RoutingConstants.orders:
-        return MaterialPageRoute(builder: (_) => Orders());
+        return PageTransition(
+            child: Orders(), type: PageTransitionType.rightToLeft);
       case RoutingConstants.editprofile:
         return MaterialPageRoute(builder: (_) => EditProfile());
       case RoutingConstants.orderdetail:
@@ -55,5 +63,5 @@ class RoutingConstants {
   static const String address = "/address";
   static const String orders = "/orders";
   static const String orderdetail = "/orderdetail";
-   static const String editprofile = "/editprofile";
+  static const String editprofile = "/editprofile";
 }
