@@ -248,7 +248,7 @@ class ApiProvider {
 
   Future<ResponseDetails> details(int id) async {
     String append = "products/getDetail";
-    //print(_base+append);
+    
     try {
       Response response =
           await _dio.get(_base + append, queryParameters: {"product_id": id});

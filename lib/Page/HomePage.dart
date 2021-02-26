@@ -2,6 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neostore/Api/apiprovider.dart';
+import 'package:flutter_neostore/Bloc/AddressBloc/address_bloc.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_bloc.dart';
 import 'package:flutter_neostore/Bloc/CartBloc/cart_events.dart';
 import 'package:flutter_neostore/Bloc/ProductBloc/product_bloc.dart';
@@ -44,6 +45,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
 
 
+  
   count() async {
     ResponseCart cart = await ApiProvider().cart();
     setState(() {
@@ -102,7 +104,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           },
           child: Text(
             "NeoStore",
-            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0,
@@ -140,7 +143,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           counter.toString(),
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: width(context, 4),
+                            fontSize: 12,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -157,13 +160,17 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       drawer: drawer(),
     );
   }
+  
+
+
 
   Widget pager(BuildContext context) {
     return Container(
       height: query(context, 36),
       padding: EdgeInsets.only(top: 8.0, left: 7, right: 7, bottom: 13),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+        borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
         color: Theme.of(context).primaryColor,
       ),
       child: Card(
@@ -178,7 +185,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 borderRadius: BorderRadius.circular(15),
                 child: Carousel(
                   images: [
-                    for (var i in data) Image.asset(i.toString(), width: 180, height: 180, fit: BoxFit.fill),
+                    for (var i in data)
+                      Image.asset(i.toString(),
+                          width: 180, height: 180, fit: BoxFit.fill),
                   ],
                   dotSize: 13.0,
                   autoplay: false,
@@ -232,7 +241,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
-                    child: Image.asset(i.toString(), width: 180, height: 180, fit: BoxFit.fill),
+                    child: Image.asset(i.toString(),
+                        width: 180, height: 180, fit: BoxFit.fill),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15, left: 15),
@@ -269,7 +279,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
                       child: image == null
-                          ? Image.asset('assets/profile.png', width: 100, height: 100, fit: BoxFit.fill)
+                          ? Image.asset('assets/profile.png',
+                              width: 100, height: 100, fit: BoxFit.fill)
                           : Image(
                               width: 100,
                               height: 100,
@@ -417,7 +428,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void furniture(int i) {
     // print("Furniture: "+i.toString());
     BlocProvider.of<ProductBloc>(context).add(ProductStarted(id: i.toString()));
-    Navigator.pushNamed(context, '/products', arguments: i.toString()).then((value) => count());
+    Navigator.pushNamed(context, '/products', arguments: i.toString())
+        .then((value) => count());
   }
 
   Widget dialogLogout(BuildContext context) {

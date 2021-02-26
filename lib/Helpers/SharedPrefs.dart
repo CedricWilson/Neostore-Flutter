@@ -3,15 +3,15 @@ import 'package:flutter_neostore/Modal/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  setUser(Data data) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('fname', data.firstName);
-    prefs.setString('lname', data.firstName);
-    prefs.setString('email', data.email);
-    prefs.setString('token', data.accessToken);
-    prefs.setString('image', data.profilePic);
-    prefs.setString('bday', data.dob);
-  }
+    setUser(Data data) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('fname', data.firstName);
+      prefs.setString('lname', data.firstName);
+      prefs.setString('email', data.email);
+      prefs.setString('token', data.accessToken);
+      prefs.setString('image', data.profilePic);
+      prefs.setString('bday', data.dob);
+    }
 
   setUser2(String fname,String lname,String email,String image,String bday, String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

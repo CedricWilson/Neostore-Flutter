@@ -104,7 +104,7 @@ class _EditProfileState extends State<EditProfile> {
             height: 50,
           ),
           Column(
-            children: [
+            children: [          
               ClipRRect(
                 borderRadius: BorderRadius.circular(90.0),
                 child: InkWell(

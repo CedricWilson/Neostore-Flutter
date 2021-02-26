@@ -254,9 +254,9 @@ class _DetailsState extends State<Details> {
                 ),
               ),
               Flexible(
-                flex: 3,
+                flex: 5,
                 child: Container(
-                  height: query(context, 11),
+
                   padding: const EdgeInsets.only(top: 3.0, bottom: 5),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

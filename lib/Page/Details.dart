@@ -42,7 +42,6 @@ class _DetailsState extends State<Details> {
 
   @override
   void initState() {
-
     super.initState();
     count();
   }
@@ -91,7 +90,7 @@ class _DetailsState extends State<Details> {
                               counter.toString(),
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: width(context, 4),
+                                fontSize: 12,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -108,8 +107,7 @@ class _DetailsState extends State<Details> {
           ),
           title: Text(
             "NeoStore",
-            style: TextStyle(
-                color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -142,12 +140,11 @@ class _DetailsState extends State<Details> {
     Data list = data;
     return Card(
       margin: EdgeInsets.zero,
-            child: Container(
-        padding:
-            const EdgeInsets.only(top: 10.0, left: 12, right: 12, bottom: 6),
+      child: Container(
+        padding: const EdgeInsets.only(top: 10.0, left: 12, right: 12, bottom: 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          children: [
             Text(
               list.name,
               style: TextStyle(
@@ -198,8 +195,7 @@ class _DetailsState extends State<Details> {
         ),
         margin: EdgeInsets.only(top: 16, left: 12, right: 12, bottom: 3),
         child: Container(
-          padding:
-              const EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 3),
+          padding: const EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 3),
           //TODO make listview
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -229,54 +225,49 @@ class _DetailsState extends State<Details> {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: InkWell(
-                    child: Image(
-                      width: 300,
-                      image:
-                          NetworkImage(list.productImages[selectedIndex].image),
-                      fit: BoxFit.contain,
-                    ),
+                  child: Image(
+                    width: 300,
+                    image: NetworkImage(list.productImages[selectedIndex].image),
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
-              Flexible(
-                flex: 2,
-                child: Container(
-                          padding: const EdgeInsets.only(top: 3.0, bottom: 5),
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: list.productImages.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: GestureDetector(
-                          onTap: () {
-
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: index == selectedIndex
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.white,
-                                  width: 4),
-                            ),
-                            child: Image(
-                              height: 80,
-                              width: 80,
-                              image:
-                                  NetworkImage(list.productImages[index].image),
-                              fit: BoxFit.fill,
-                            ),
+              Container(
+                padding: const EdgeInsets.only(top: 3.0, bottom: 5),
+                height: 90,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: list.productImages.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: index == selectedIndex ? Theme.of(context).primaryColor : Colors.white,
+                                width: 4),
+                          ),
+                          child: Wrap(
+                            children: [
+                              Image(
+                                height: 80,
+                                width: 90,
+                                image: NetworkImage(list.productImages[index].image),
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Flexible(
@@ -289,8 +280,7 @@ class _DetailsState extends State<Details> {
               Expanded(
                 flex: 5,
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8.0, left: 8, right: 8, bottom: 7),
+                  padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8, bottom: 7),
                   child: SingleChildScrollView(
                     child: Text(
                       list.description,
@@ -310,86 +300,79 @@ class _DetailsState extends State<Details> {
     Data list = data;
 
     return Container(
-
         child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-                children: [
-              Expanded(
-                child: FlatButton(
-          padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () async {
-
-                      showDialog(
-                          barrierDismissible: true,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(32.0))),
-                              content: Container(
-                                child: buyDialogue(context, list),
-                              ),
-                            );
-                          });
-                    },
-                    child: Text(
-                      "BUY",
-                      style: TextStyle(color: Colors.white),
-                    )),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: FlatButton(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    color: Colors.grey[350],
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible:
-                              true, // set to false if you want to force a rating
-                          builder: (context) {
-                            return RatingDialog(
-                              icon: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: Image(
-                                  width: 300,
-                                  image:
-                                      NetworkImage(list.productImages[0].image),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              title: list.name,
-                              description: "Tap a star to set your rating",
-                              submitButton: "SUBMIT",
-                              accentColor:
-                                  Theme.of(context).primaryColor, // optional
-                              onSubmitPressed: (int rating) async {
-                                String msg =
-                                    await ApiProvider().rate(list.id, rating);
-                                Fluttertoast.showToast(msg: msg);
-                              },
-                            );
-                          });
-                    },
-                    child: Text(
-                      "RATE",
-                    )),
-              ),
-            ],
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: FlatButton(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                color: Theme.of(context).primaryColor,
+                onPressed: () async {
+                  showDialog(
+                      barrierDismissible: true,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                          content: Container(
+                            child: buyDialogue(context, list),
+                          ),
+                        );
+                      });
+                },
+                child: Text(
+                  "BUY",
+                  style: TextStyle(color: Colors.white),
+                )),
           ),
-        ));
+          SizedBox(
+            width: 5,
+          ),
+          Expanded(
+            child: FlatButton(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                color: Colors.grey[350],
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: true, // set to false if you want to force a rating
+                      builder: (context) {
+                        return RatingDialog(
+                          icon: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Image(
+                              width: 300,
+                              image: NetworkImage(list.productImages[0].image),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          title: list.name,
+                          description: "Tap a star to set your rating",
+                          submitButton: "SUBMIT",
+                          accentColor: Theme.of(context).primaryColor,
+                          // optional
+                          onSubmitPressed: (int rating) async {
+                            String msg = await ApiProvider().rate(list.id, rating);
+                            Fluttertoast.showToast(msg: msg);
+                          },
+                        );
+                      });
+                },
+                child: Text(
+                  "RATE",
+                )),
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget buyDialogue(BuildContext context, Data list) {
@@ -428,8 +411,7 @@ class _DetailsState extends State<Details> {
                             const Radius.circular(15.0),
                           ),
                           // width: 0.0 produces a thin "hairline" border
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 2),
+                          borderSide: const BorderSide(color: Colors.blue, width: 2),
                         ),
                         border: const OutlineInputBorder(),
                         labelStyle: new TextStyle(color: Colors.green),
@@ -454,11 +436,11 @@ class _DetailsState extends State<Details> {
                   ),
                   SizedBox(height: 30),
                   Container(
-                   // height: 50,
+                    // height: 50,
                     child: Row(
-                    //  mainAxisSize: MainAxisSize.min,
+                      //  mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                     // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Expanded(
                           child: FlatButton(
@@ -477,15 +459,11 @@ class _DetailsState extends State<Details> {
                               }
                               _detailsform.currentState.save();
 
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
                               String token = prefs.getString('token') ?? '';
                               Navigator.pop(context);
 
-                              ApiProvider()
-                                  .buy(token, list.id.toString(),
-                                      quantity.toString())
-                                  .then((value) {
+                              ApiProvider().buy(token, list.id.toString(), quantity.toString()).then((value) {
                                 Fluttertoast.showToast(msg: value.userMsg);
                                 count();
                               }).catchError((error, stackTrace) {
