@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "*.build": true,
+        "**/.*": true,
+        "**/.dart_tool": true,
+        "**/.idea": true,
+        "**/.test": true,
+        "**/.vscode": true,
+        "build": true,
+        "integration_test": true,
+        "ios": true,
+        "lib/generated_plugin_registrant.dart": true,
+        "test": true
+    },
+    "dart.previewFlutterUiGuidesCustomTracking": true
+}
