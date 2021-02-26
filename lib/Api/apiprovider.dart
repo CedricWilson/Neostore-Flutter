@@ -74,6 +74,7 @@ class ApiProvider {
       print(e.message);
       print("DIO: " + e.response.data.toString());
       var parsed = json.decode(e.response.data);
+      print("hi");
       throw parsed["user_msg"];
     }
   }
